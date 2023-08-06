@@ -1,0 +1,13 @@
+{
+  "primary": "#3e95be",
+  "backgroundColor": "#fff",
+  "sec_Primary": "#2ca29e",
+  "secondary": "#ebf6f6",
+  "text": "#000",
+  "textSecondary": "#AFAFBD",
+  "gray": "gray",
+  "white": "#fff",
+  "liteGrey": "#e3e0e0",
+  "transparentGray": "#808080db",
+  "skyblue": "#329EA8"
+}
