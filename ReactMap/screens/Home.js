@@ -22,7 +22,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format, formatDistanceToNow } from 'date-fns';
 import { getLocation } from '../Utils/requestLocationPermission';
-import getDistanceFromLatLon from '../Utils/getDistanceFromLatLon';
 import notifee from '@notifee/react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -435,7 +434,7 @@ function Home({ route, navigation }) {
   const { start } = useTourGuideController()
 
   React.useEffect(() => {
-    start()
+    start() 
   }, [])
   const onStart = () => {
     // Checking if the task i am going to create already exist and running, which means that the foreground is also running.
@@ -517,65 +516,6 @@ function Home({ route, navigation }) {
       });
       firstTime.current = false;
     }
-    alarmRef.current.forEach((item, i) => {
-      // console.log('--------------',item)
-      if (item.isActive && item.timeAlarm && item.distanceAlarm) {
-        const distance = getDistanceFromLatLon(
-          coords.latitude,
-          coords.longitude,
-          item.coordinate.latitude,
-          item.coordinate.longitude,
-        );
-        // const timeDifference = Math.abs(
-        //   differenceInMinutes(new Date(item.dateTime), new Date()),
-        // );
-        // console.log(4, timeDifference);
-        if (
-          item.time &&
-          item.endTime &&
-          distance <= item.distance &&
-          new Date() >= new Date(item.time.toDate()) &&
-          new Date() <= new Date(item.endTime.toDate())
-        ) {
-          onDisplayNotification(
-            `Time alarm (${item.location}) - ${formatDistanceToNow(
-              new Date(item.dateTime),
-            )}`,
-            `2 You are ${Math.round(distance * 1609.344)} meters away from ${item.location
-            }`,
-            { id: item.id },
-          );
-          alarmRef.current[i].isActive = false;
-        }
-      } else if (item.isActive && item.distanceAlarm) {
-        if (item.snoozeTime && new Date() < new Date(item.snoozeTime)) {
-          return;
-        }
-        const distance = getDistanceFromLatLon(
-          coords.latitude,
-          coords.longitude,
-          item.coordinate.latitude,
-          item.coordinate.longitude,
-        );
-        if (distance <= item.distance) {
-          if (auth()?.currentUser?.uid) {
-            firestore()
-              .collection('Users')
-              .doc(auth().currentUser.uid)
-              .collection('Alarms')
-              .doc(item.id)
-              .update({ isActive: false });
-          }
-          onDisplayNotification(
-            item.location,
-            `You are ${Math.round(distance * 1609.344)} meters away from ${item.location
-            }`,
-            { id: item.id },
-          );
-          alarmRef.current[i].isActive = false;
-        }
-      }
-    });
   };
 
 
@@ -978,7 +918,7 @@ function Home({ route, navigation }) {
         zone={1}
         text={'A react-native-copilot remastered! 🎉'}
         borderRadius={16}
-      >
+      />
       <SearchBar
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
@@ -999,7 +939,6 @@ function Home({ route, navigation }) {
           rawSheetRef.current.open();
         }}
       />
-      </TourGuideZone>
       <TouchableOpacity
         style={{
           position: 'absolute',
