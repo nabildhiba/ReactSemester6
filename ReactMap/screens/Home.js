@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,20 +8,20 @@ import {
   Alert,
   Linking,
 } from 'react-native';
-import { Text } from '../components/Text';
+import {Text} from '../components/Text';
 import colors from '../constant/colors.json';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 import SearchBar from '../components/SearchBar';
 import AppCheckbox from '../components/AppCheckbox';
 import Spinner from '../components/Spinner';
-import MapView, { Marker, PROVIDER_GOOGLE, Circle } from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE, Circle} from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { Picker } from '@react-native-picker/picker';
+import {Picker} from '@react-native-picker/picker';
 import IIcon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { format, formatDistanceToNow } from 'date-fns';
-import { getLocation } from '../Utils/requestLocationPermission';
+import {format, formatDistanceToNow} from 'date-fns';
+import {getLocation} from '../Utils/requestLocationPermission';
 import notifee from '@notifee/react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -31,20 +31,19 @@ import Geolocation from 'react-native-geolocation-service';
 import moment from 'moment';
 import ReactNativeForegroundService from '@supersami/rn-foreground-service';
 import RNLocation from 'react-native-location';
-import { uniqBy } from 'lodash';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import {uniqBy} from 'lodash';
+import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import {
   TourGuideProvider, // Main provider
   TourGuideZone, // Main wrapper of highlight component
   TourGuideZoneByPosition, // Component to use mask on overlay (ie, position absolute)
   useTourGuideController, // hook to start, etc.
-} from 'rn-tourguide'
+} from 'rn-tourguide';
 const GLOBAL = require('../Utils/Global');
 
 const milesArray = [
   0.0310685596, 0.0621371192, 0.1242742384, 0.1864113577, 0.2485484769,
 ];
-
 
 // notifee.onBackgroundEvent(async ({type, detail}) => {
 //   // const {notification, pressAction} = detail;
@@ -102,17 +101,17 @@ const DistanceAlarmCard = ({
         borderRadius: 5,
         marginBottom: 10,
       }}>
-      <View style={{ flex: 0.1 }}>
+      <View style={{flex: 0.1}}>
         <AppCheckbox
           value={distanceCheckbox}
           onValueChange={newValue => {
             // console.log(newValue)
             // setDistanceCheckbox(newValue)
           }}
-          style={{ margin: 5 }}
+          style={{margin: 5}}
         />
       </View>
-      <View style={{ flex: 0.9 }}>
+      <View style={{flex: 0.9}}>
         <Text style={styles.text}>Distance Alarm</Text>
         <View
           style={{
@@ -122,7 +121,7 @@ const DistanceAlarmCard = ({
           <Text style={styles.text}>Distance:</Text>
           <TouchableOpacity
             onPress={() => pickerRef.current.focus()}
-            style={{ flexDirection: 'row' }}>
+            style={{flexDirection: 'row'}}>
             <Text style={styles.text}>{`${Math.round(
               selectDistance * 1609.344,
             )} meter(s)`}</Text>
@@ -130,10 +129,10 @@ const DistanceAlarmCard = ({
               name="chevron-down"
               size={20}
               color="#fff"
-              style={{ position: 'relative', top: 5, right: 2 }}
+              style={{position: 'relative', top: 5, right: 2}}
             />
             <Picker
-              style={{ flex: 1, zIndex: 55555 }}
+              style={{flex: 1, zIndex: 55555}}
               dropdownIconColor="#2BA29D"
               ref={pickerRef}
               selectedValue={selectDistance}
@@ -206,14 +205,14 @@ const TimeAlarmCard = ({
         borderRadius: 5,
         marginBottom: 10,
       }}>
-      <View style={{ flex: 0.1 }}>
+      <View style={{flex: 0.1}}>
         <AppCheckbox
           value={timeCheckbox}
           onValueChange={newValue => setTimeCheckbox(newValue)}
-          style={{ margin: 5 }}
+          style={{margin: 5}}
         />
       </View>
-      <View style={{ flex: 0.9 }}>
+      <View style={{flex: 0.9}}>
         <Text style={styles.text}>Time Alarm</Text>
         <View
           style={{
@@ -225,7 +224,7 @@ const TimeAlarmCard = ({
           <Text style={styles.text}>Date:</Text>
           <TouchableOpacity
             onPress={() => setShowDate(true)}
-            style={{ flexDirection: 'row', alignItems: 'center' }}>
+            style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.text}>{format(date, 'd-M-y')}</Text>
             <IIcon name="chevron-down" size={20} color="#fff" />
             {showDate && (
@@ -249,7 +248,7 @@ const TimeAlarmCard = ({
           <Text style={styles.text}>Start Time:</Text>
           <TouchableOpacity
             onPress={() => setShowTime(true)}
-            style={{ flexDirection: 'row', alignItems: 'center' }}>
+            style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.text}>{format(time, 'hh:mm a')}</Text>
             <IIcon name="chevron-down" size={20} color="#fff" />
             {showTime && (
@@ -272,7 +271,7 @@ const TimeAlarmCard = ({
           <Text style={styles.text}>End Time:</Text>
           <TouchableOpacity
             onPress={() => setShowEndTime(true)}
-            style={{ flexDirection: 'row', alignItems: 'center' }}>
+            style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.text}>{format(endTime, 'hh:mm a')}</Text>
             <IIcon name="chevron-down" size={20} color="#fff" />
             {showEndTime && (
@@ -292,10 +291,7 @@ const TimeAlarmCard = ({
     </LinearGradient>
   );
 };
-const NotesCard = ({
-  notes,
-  setNotes
-}) => {
+const NotesCard = ({notes, setNotes}) => {
   return (
     <LinearGradient
       colors={['#4292C5', '#1FAB86']}
@@ -307,7 +303,7 @@ const NotesCard = ({
         borderRadius: 5,
         marginBottom: 10,
       }}>
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Text style={styles.text}>Notes</Text>
         <View
           style={{
@@ -316,15 +312,16 @@ const NotesCard = ({
             alignItems: 'center',
             // marginVertical: -10
           }}>
-          <TextInput onChangeText={setNotes} style={styles.text} placeholder="Put a note here (running errands? Chopping a coffee?"></TextInput>
-          <TouchableOpacity>
-          </TouchableOpacity>
+          <TextInput
+            onChangeText={setNotes}
+            style={styles.text}
+            placeholder="Put a note here (running errands? Chopping a coffee?"></TextInput>
+          <TouchableOpacity></TouchableOpacity>
         </View>
       </View>
     </LinearGradient>
   );
 };
-
 
 // const NotificationViaCard = ({notificationVia, setNotificationVia}) => {
 //   // const [notificationVia, setNotificationVia] = useState('App Notification');
@@ -383,7 +380,7 @@ const NotesCard = ({
 //   );
 // };
 
-const SubmitButton = ({ onPress = () => null }) => {
+const SubmitButton = ({onPress = () => null}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <LinearGradient
@@ -403,14 +400,14 @@ const SubmitButton = ({ onPress = () => null }) => {
   );
 };
 
-function Home({ route, navigation }) {
+function Home({route, navigation}) {
   const [marker, setMarker] = useState(null);
   const rawSheetRef = useRef(null);
   const [selectDistance, setSelectDistance] = useState(milesArray[0]);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState('');
   // const [notificationVia, setNotificationVia] = useState('App Notification');
   const [distanceCheckbox, setDistanceCheckbox] = useState(true);
   const [timeCheckbox, setTimeCheckbox] = useState(false);
@@ -421,7 +418,6 @@ function Home({ route, navigation }) {
   const mapRef = useRef(null);
   const [locationAlarmName, setLocationAlarm] = useState('');
   const [placeIdAlarm, setLocationPlaceIdAlarm] = useState('');
-  
 
   const onStop = () => {
     // Make always sure to remove the task before stoping the service. and instead of re-adding the task you can always update the task.
@@ -431,11 +427,13 @@ function Home({ route, navigation }) {
     // Stoping Foreground service.
     return ReactNativeForegroundService.stop();
   };
-  const { start } = useTourGuideController()
+  const {start, canStart} = useTourGuideController();
 
   React.useEffect(() => {
-    start() 
-  }, [])
+    if (canStart) {
+      start();
+    }
+  }, [canStart]);
   const onStart = () => {
     // Checking if the task i am going to create already exist and running, which means that the foreground is also running.
     if (ReactNativeForegroundService.is_task_running(1234)) {
@@ -445,7 +443,7 @@ function Home({ route, navigation }) {
     ReactNativeForegroundService.add_task(
       async () => {
         console.log(new Date());
-        
+
         // Geolocation.watchPosition(position => {
         //   console.log(
         //     'watch position',
@@ -483,7 +481,7 @@ function Home({ route, navigation }) {
       id: data.id,
       title,
       body,
-      data: { ...data, link: 'erminder://Snooze' },
+      data: {...data, link: 'erminder://Snooze'},
       android: {
         channelId,
         sound: 'default',
@@ -518,7 +516,6 @@ function Home({ route, navigation }) {
     }
   };
 
-
   const onMapPress = e => {
     setMarker({
       coordinate: e.nativeEvent.coordinate,
@@ -541,7 +538,7 @@ function Home({ route, navigation }) {
       });
       return;
     }
-    function createAlarm(label, place_id=null) {
+    function createAlarm(label, place_id = null) {
       const Alarms = firestore()
         .collection('Users')
         .doc(auth().currentUser.uid)
@@ -557,13 +554,13 @@ function Home({ route, navigation }) {
         notes: notes,
         coordinate: marker.coordinate,
         location: label,
-        locationGooglePlaceId:place_id,
+        locationGooglePlaceId: place_id,
         distance: selectDistance,
         notificationVia: 'App Notification',
         dateTime: `${format(date, 'yyyy-MM-dd')}T${format(time, 'HH:mm:ss')}`,
         dateTimeFormatted: `${format(date, 'dd/MM/yyyy')} ${format(
           time,
-          'HH:mm'
+          'HH:mm',
         )}`,
         isActive: true,
         createdAt: firestore.Timestamp.fromDate(new Date()),
@@ -590,27 +587,32 @@ function Home({ route, navigation }) {
     if (auth()?.currentUser?.uid) {
       setLoading(true);
       if (locationAlarmName.length == 0) {
-        resluts = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${marker.coordinate.latitude},${marker.coordinate.longitude}&key=${GLOBAL.MAPS_API_KEY}`,
-        ).then(
-          async resp => {
+        resluts = await axios
+          .get(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${marker.coordinate.latitude},${marker.coordinate.longitude}&key=${GLOBAL.MAPS_API_KEY}`,
+          )
+          .then(async resp => {
             // If no known place here => The alarm will be labeled unknown address
             if (resp.data?.results[0].place_id.length == 0) {
               createAlarm('Unknown address');
               return;
             }
             //From here: we find a unique Google place=> Label the alarm by the place.
-            locationSearch = await axios.get(
-              `https://maps.googleapis.com/maps/api/place/details/json?place_id=${resp.data?.results[0].place_id}&key=${GLOBAL.MAPS_API_KEY}`
-            ).then(
-              lastRep => {
-                createAlarm(lastRep.data?.result?.name ?? 'Unknown address',resp.data?.results[0]?.place_id);
+            locationSearch = await axios
+              .get(
+                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${resp.data?.results[0].place_id}&key=${GLOBAL.MAPS_API_KEY}`,
+              )
+              .then(lastRep => {
+                createAlarm(
+                  lastRep.data?.result?.name ?? 'Unknown address',
+                  resp.data?.results[0]?.place_id,
+                );
               });
           });
       } else {
-        createAlarm(locationAlarmName,placeIdAlarm);
+        createAlarm(locationAlarmName, placeIdAlarm);
       }
-    };
+    }
   };
 
   const checkAlarams = () => {
@@ -641,7 +643,6 @@ function Home({ route, navigation }) {
   //   return unsubscribe;
   // }, [navigation]);
 
- 
   // const newMethod = async () => {
   //   const backgroundgranted = await PermissionsAndroid.request(
   //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
@@ -749,13 +750,13 @@ function Home({ route, navigation }) {
               if (change.type === 'added') {
                 setAlarmData(prev => {
                   return uniqBy(
-                    [{ ...change.doc.data(), id: change.doc.id }, ...prev],
+                    [{...change.doc.data(), id: change.doc.id}, ...prev],
                     'id',
                   );
                 });
                 alarmRef.current = uniqBy(
                   [
-                    { ...change.doc.data(), id: change.doc.id },
+                    {...change.doc.data(), id: change.doc.id},
                     ...alarmRef.current,
                   ],
                   'id',
@@ -766,7 +767,7 @@ function Home({ route, navigation }) {
                   return uniqBy(
                     prev.map(item => {
                       if (item.id === change.doc.id) {
-                        return { ...item, ...change.doc.data() };
+                        return {...item, ...change.doc.data()};
                       } else {
                         return item;
                       }
@@ -777,7 +778,7 @@ function Home({ route, navigation }) {
                 alarmRef.current = uniqBy(
                   alarmRef.current.map(item => {
                     if (item.id === change.doc.id) {
-                      return { ...item, ...change.doc.data() };
+                      return {...item, ...change.doc.data()};
                     } else {
                       return item;
                     }
@@ -826,7 +827,7 @@ function Home({ route, navigation }) {
     Geolocation.getCurrentPosition(
       info => {
         if (info?.coords) {
-          const { coords } = info;
+          const {coords} = info;
 
           mapRef.current.animateToRegion({
             latitude: coords.latitude,
@@ -847,10 +848,10 @@ function Home({ route, navigation }) {
   };
 
   return (
-    <>
+    <View style={{flex: 1}}>
       <MapView
         ref={mapRef}
-        style={{ flex: 1 }}
+        style={{flex: 1}}
         provider={PROVIDER_GOOGLE}
         // region={region}
         // initialRegion={{
@@ -914,16 +915,33 @@ function Home({ route, navigation }) {
           );
         })}
       </MapView>
-      <TourGuideZone
-        zone={1}
+
+      <TourGuideZoneByPosition
+        zone={2}
         text={'A react-native-copilot remastered! 🎉'}
         borderRadius={16}
+        isTourGuide
+        top={0}
+        height={'90%'}
+        width={'100%'}
       />
+
+      <TourGuideZoneByPosition
+        zone={1}
+        text={'A react-native-copilot remastered! 🎉'}
+        borderRadius={25}
+        isTourGuide
+        top={'5%'}
+        left={'10%'} // 10% left, 10% right + 80% width
+        width={'80%'}
+        height={50}
+      />
+
       <SearchBar
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
-          console.log("We are here");
-          const { lat: latitude, lng: longitude } = details.geometry.location;
+          console.log('We are here');
+          const {lat: latitude, lng: longitude} = details.geometry.location;
           setLocationAlarm(details.name);
           setLocationPlaceIdAlarm(data.place_id);
           // setRegion(prev => ({...prev, latitude, longitude}));
@@ -934,7 +952,7 @@ function Home({ route, navigation }) {
             longitudeDelta: 0.0421,
           });
           setMarker({
-            coordinate: { latitude, longitude },
+            coordinate: {latitude, longitude},
           });
           rawSheetRef.current.open();
         }}
@@ -979,7 +997,7 @@ function Home({ route, navigation }) {
               padding: 16,
             },
             wrapper: {
-              backgroundColor: "transparent"
+              backgroundColor: 'transparent',
             },
           }}>
           <ScrollView>
@@ -999,9 +1017,7 @@ function Home({ route, navigation }) {
               timeCheckbox={timeCheckbox}
               setTimeCheckbox={setTimeCheckbox}
             />
-            <NotesCard notes={notes} setNotes={setNotes}>
-
-            </NotesCard>
+            <NotesCard notes={notes} setNotes={setNotes}></NotesCard>
             {/* <NotificationViaCard
             notificationVia={notificationVia}
             setNotificationVia={setNotificationVia}
@@ -1011,7 +1027,7 @@ function Home({ route, navigation }) {
         </RBSheet>
       </View>
       <Spinner show={loading} />
-    </>
+    </View>
   );
 }
 

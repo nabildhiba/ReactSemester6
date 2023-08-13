@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
     top: 10,
     alignSelf: 'center',
     flexDirection: 'row',
-    width: width * 0.85,
+    width: '85%',
+    height: 40,
   },
   input: {
     height: 40,
